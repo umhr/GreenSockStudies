@@ -11,7 +11,15 @@ package
 	/**
 	 * TweenLiteのデフォルトのイージングはQuad.easeOut。
 	 * 同様のイージングを作る場合の例を作成。
-	 * 基本構造を示すことを優先しているので、実際に使う上での使いやすさや描画やメモリ最適化等は考慮していません。
+	 * 基本構造を示すことを優先しているので、実際に使う上での使いやすさや
+	 * 描画やメモリ最適化等は考慮していません。
+	 * 
+	 * イージングについてはこちらをご覧ください。
+	 * 第1回 イージングとはなにか
+	 * https://app.codegrid.net/entry/easing-1
+	 * 
+	 * イージングはC/C++のコードも公開されています。
+	 * http://robertpenner.com/easing/
 	 * ...
 	 * @author umhr
 	 */
@@ -72,7 +80,8 @@ package
 			
 			_toX = toX;
 			
-			// ミリ秒単位で指定したタイマーイベント間の遅延 30fpsの場合、1000/30 = 33.3ミリ秒
+			// ミリ秒単位で指定したタイマーイベント間の遅延。
+			// 30fpsの場合、1000/30 = 33.3ミリ秒
 			var delay:Number = 1000 / stage.frameRate;
 			// 繰り返しの回数を指定します。継続時間とフレームレートから求める。
 			var repeatCount:int = Math.ceil(time * stage.frameRate);
@@ -104,6 +113,14 @@ package
 			}
 		}
 		
+		/**
+		 * 
+		 * @param	t	現在時間
+		 * @param	b	開始点
+		 * @param	c	終了点
+		 * @param	d	全体の時間
+		 * @return
+		 */
 		private static function easeOutQuad (t:Number, b:Number, c:Number, d:Number):Number
 		{
 			return -c * (t /= d) * (t - 2) + b;

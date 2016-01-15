@@ -4,7 +4,8 @@ package
 	import flash.text.TextField;
 	
 	/**
-	 * 数、文字、配列、trace、暗黙の型変換、値渡し、参照渡しの例です。
+	 * ActionScript3.0(AS3)の基本的な書き方の例を示します。
+	 * 数、文字、配列、連想配列、暗黙の型変換、値渡し、参照渡し、traceの例です。
 	 * ...
 	 * @author umhr
 	 */

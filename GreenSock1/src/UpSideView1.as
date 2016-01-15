@@ -9,7 +9,7 @@ package
 	 * ...
 	 * @author umhr
 	 */
-	public class UpSideView extends Sprite 
+	public class UpSideView1 extends Sprite 
 	{
 		private var _lineList:Array/*Line*/ = [];
 		private var _timeline:TimelineLite;
@@ -18,7 +18,7 @@ package
 		 * 時間とzoomの割合を保持するオブジェクト（連想配列）
 		 */
 		private var _toObj:Object = { time:0, ratio:0 };
-		public function UpSideView() 
+		public function UpSideView1() 
 		{
 			// 線を生成。
 			var n:int = 32;
@@ -29,7 +29,8 @@ package
 				_lineList[i] = line;// 配列に追加
 			}
 			
-			// nの長さのタイムラインを作る。最初のページの表面から始まり、最後のページの裏面で終わるため、ページ数に1を加える。
+			// nの長さのタイムラインを作る。最初のページの表面から始まり、
+			// 最後のページの裏面で終わるため、ページ数に1を加える。
 			n = _lineList.length + 1;
 			for (i = 0; i < n; i++) 
 			{

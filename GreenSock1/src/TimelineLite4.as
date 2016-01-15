@@ -7,6 +7,9 @@ package
 	import flash.events.Event;
 	/**
 	 * TimelineLiteを用いたアニメーション。
+	 * 二つのスライダによって、二つの値を操作している。
+	 * timeによって、x座標が変化し、ratioによってy座標が変化する。
+	 * ratioが0の時と1の時に、timeを変化に対する赤丸の動きが異なることに注意。
 	 * ...
 	 * @author umhr
 	 */
@@ -21,20 +24,16 @@ package
 		public function TimelineLite4() 
 		{
 			
-			//_ball.aY = 100;
 			addChild(_ball);
 			
-			// 4つのポジションを指定する。初期位置が0段階目なので、合計5段階になることに注意。
-			// 1段階あたりdurationが1秒なので、0秒から始まり、4秒目までの4秒間のポジションが決定される。
-			// 2.3秒目は、2段階目から0.3だけ3段階目に近いポジションに補完して実行される。
 			_timeline.append(TweenLite.to(_ball, 1, { aX:100, pY:200 } ));
-			_timeline.append(TweenLite.to(_ball, 1, { aX:200, pY:300 } ));
-			_timeline.append(TweenLite.to(_ball, 1, { aX:300, pY:100 } ));
+			_timeline.append(TweenLite.to(_ball, 1, { aX:150, pY:300 } ));
+			_timeline.append(TweenLite.to(_ball, 1, { aX:350, pY:100 } ));
 			_timeline.append(TweenLite.to(_ball, 1, { aX:400, pY:400 } ));
 			_timeline.stop();
 			
 			// ステージ左上に表示するスライダー、操作するとonSlideが実行される
-			_slider1 = new HUISlider(this, 40, 20, "time", onSlide);
+			_slider1 = new HUISlider(this, 40, 20, "time", onSlideTime);
 			_slider1.minimum = 0;
 			_slider1.maximum = 4;
 			
@@ -52,7 +51,7 @@ package
 		}
 		
 		
-		private function onSlide(e:Event):void 
+		private function onSlideTime(e:Event):void 
 		{
 			// スライダーの値に応じた値を設定する。
 			var newTime:Number = (_slider1.value);

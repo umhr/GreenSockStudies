@@ -12,7 +12,8 @@ package
 	import flash.utils.Timer;
 	/**
 	 * TweenLiteと同様のイージングを作る場合の例を作成。
-	 * 基本構造を示すことを優先しているので、実際に使う上での使いやすさや描画やメモリ最適化等は考慮していません。
+	 * 基本構造を示すことを優先しているので、実際に使う上での使いやすさや
+	 * 描画やメモリ最適化等は考慮していません。
 	 * ...
 	 * @author umhr
 	 */
@@ -180,6 +181,14 @@ package
 		}
 		
 		
+		/**
+		 * 
+		 * @param	t	現在時間
+		 * @param	b	開始点
+		 * @param	c	終了点
+		 * @param	d	全体の時間
+		 * @return
+		 */
 		public static function easeLinear (t:Number, b:Number, c:Number, d:Number):Number
 		{
 			return c*t/d + b;

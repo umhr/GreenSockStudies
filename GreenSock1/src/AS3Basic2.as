@@ -34,7 +34,8 @@ package
 			ball.graphics.endFill();
 			ball.x = 100;
 			ball.y = 50;
-			// 表示オブジェクトに登録。rectよりも後に登録するので、rectよりも上に描画されます。
+			// 表示オブジェクトに登録。rectよりも後に登録するので、
+			// rectよりも上に描画されます。
 			addChild(ball);
 			
 			// TextFieldはテキストを表示する表示オブジェクトです。
