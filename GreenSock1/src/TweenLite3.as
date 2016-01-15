@@ -11,6 +11,7 @@ package
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	/**
+	 * イージングを作る場合の例（Linear、Quad.easeOut、Cubic.easeOut）です。
 	 * TweenLiteと同様のイージングを作る場合の例を作成。
 	 * 基本構造を示すことを優先しているので、実際に使う上での使いやすさや
 	 * 描画やメモリ最適化等は考慮していません。

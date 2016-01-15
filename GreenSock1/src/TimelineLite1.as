@@ -35,7 +35,7 @@ package
 			// ポジションに補完して実行される。
 			_timeline.append(TweenLite.to(ball, 1, { x:100 } ));
 			_timeline.append(TweenLite.to(ball, 1, { x:200 } ));
-			_timeline.append(TweenLite.to(ball, 1, { y:250 } ));
+			_timeline.append(TweenLite.to(ball, 1, { x:250, y:250 } ));// カンマで区切ると複数の値を設定可能
 			_timeline.append(TweenLite.to(ball, 1, { x:400 } ));
 			_timeline.stop();
 			

@@ -5,7 +5,8 @@ package
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	/**
-	 * ステージ上をスワイプすると円が移動します。離した瞬間の加速度から摩擦量の割合だけ減衰してとまります。
+	 * ステージ上をスワイプすると円が移動します。
+	 * 離した瞬間の加速度から摩擦量の割合だけ減衰してとまります。
 	 * ...
 	 * @author umhr
 	 */
