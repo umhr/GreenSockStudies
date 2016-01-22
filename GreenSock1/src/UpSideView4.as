@@ -1,26 +1,32 @@
 package 
 {
+	import com.bit101.components.HUISlider;
 	import com.bit101.components.PushButton;
 	import com.greensock.TimelineLite;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	/**
-	 * 真上から見た場合のページの動きです。
-	 * 「to16」などのボタンを押下してください。
+	 * zoom()の実行のさせ方を、
+	 * iPadアプリ（オンラインデモ）に近づけた。
+	 * わかりやすさを優先させるため、若干おかしな動きもある。
 	 * ...
 	 * @author umhr
 	 */
-	public class UpSideView1 extends Sprite 
+	public class UpSideView4 extends Sprite 
 	{
 		private var _lineList:Array/*Line*/ = [];
 		private var _timeline:TimelineLite;
-		
+		private var _slider1:HUISlider;
+		private var _slider2:HUISlider;
+		private var _force:Force1 = new Force1();
 		/**
 		 * 時間とzoomの割合を保持するオブジェクト（連想配列）
 		 */
 		private var _toObj:Object = { time:0, ratio:0 };
-		public function UpSideView1() 
+		private var _count:int = 0;
+		private var _toZoom:Number = -1;
+		public function UpSideView4() 
 		{
 			// 線を生成。
 			var n:int = 32;
@@ -40,6 +46,8 @@ package
 				setTween();// 設定された位置を元にtimelineに登録する。
 			}
 			
+			addChild(_force);
+			
 			// ボタンを生成
 			new PushButton(this, 65*0, 430, "to0", onPush).width = 50;
 			new PushButton(this, 65*1, 430, "to16", onPush).width = 50;
@@ -47,10 +55,45 @@ package
 			new PushButton(this, 65*3, 430, "+", onPush).width = 50;
 			new PushButton(this, 65*4, 430, "-", onPush).width = 50;
 			new PushButton(this, 65*5, 430, "zoom(1)", onPush).width = 50;
-			new PushButton(this, 65*6, 430, "zoom(0)", onPush).width = 50;
+			new PushButton(this, 65 * 6, 430, "zoom(0)", onPush).width = 50;
+			
+			// ステージ左上に表示するスライダー、操作するとonSlideTimeが実行される
+			_slider1 = new HUISlider(this, 40, 20, "time", onSlideTime);
+			_slider1.minimum = 0;
+			_slider1.maximum = 32;
+			
+			// ステージ左上に縦に表示されるスライダー、操作するとonSlideRatioが実行される
+			_slider2 = new HUISlider(this, 20, 40, "ratio", onSlideRatio);
+			_slider2.minimum = 0;
+			_slider2.maximum = 1;
+			_slider2.rotation = 90;
 			
 			// 位置の初期化
 			onZoomUpdate();
+			
+			addEventListener(Event.ENTER_FRAME, enterFrame);
+		}
+		
+		private function enterFrame(e:Event):void 
+		{
+			// _countの値によって、zoom関数を実行する。
+			// ユーザーのタップ、スワイプイベントから直接zoom()関数を呼び出してしまうと、
+			// 複数のイベントが連続して実行される場合に不具合を生じやすい。
+			// ユーザーのタップ、スワイプイベントでは、_countの値を変化するだけにして、
+			// _coutnによってどうふるまうかは、ここで決めている。
+			if (_count == 0) {
+				zoom(0);
+			}else if(_count < 0){
+				zoom(1);
+			}
+			
+			_force.enterFrame();
+			
+			var time:Number = _timeline.time();
+			var newTime:Number = time-_force.currentDistanceValue * 0.002;
+			gotoAndStop(newTime);
+			
+			_count ++;
 		}
 		
 		private function setPage(pageNum:Number):void 
@@ -95,7 +138,30 @@ package
 			_timeline.stop();
 		}
 		
+		private function onSlideTime(e:Event):void 
+		{
+			// スライダーの値に応じた値を設定する。
+			var newTime:Number = (_slider1.value);
+			
+			// タイムラインの時刻をnewTime 秒目に移動する。
+			_toObj.time = newTime;
+			gotoAndStop(newTime);
+		}
+		
+		private function onSlideRatio(e:Event):void 
+		{
+			// スライダーの値に応じた値を設定する。
+			var newRatio:Number = _slider2.value;
+			_toObj.ratio = newRatio;
+			onZoomUpdate();
+		}
+		
 		private function zoom(ratio:Number = 0):void {
+			if (_toZoom == ratio) {
+				return;
+			}
+			_toZoom = ratio;
+			
 			// _toObj.ratioを0.3秒かけてratioに変化させる。
 			var tween:TweenLite = new TweenLite(_toObj, 0.3, { "ratio":ratio } );
 			// 変化が実行されるたびに、onZoomUpdate関数を実行する。
@@ -110,6 +176,7 @@ package
 				_lineList[i].ratio = _toObj.ratio;
 				_lineList[i].update = 0;
 			}
+			_slider2.value = _toObj.ratio;
 		}
 		
 		/**
@@ -148,7 +215,8 @@ package
 			tween.eventCallback("onUpdate", onUpdate);
 			tween.eventCallback("onComplete", onComplete);
 			tween.play();
-			zoom(1);
+			//zoom(1);
+			_count = -duration * 30 - 10;
 		}
 		
 		private function onUpdate():void {
@@ -156,7 +224,7 @@ package
 		}
 		private function onComplete():void {
 			//trace("onComplete");
-			zoom(0);
+			//zoom(0);
 		}
 		
 		public function gotoAndStop(value:Number):void {
@@ -164,6 +232,11 @@ package
 			value = Math.min(Math.max(value, 0), _lineList.length);
 			// タイムラインのvalue秒目に移動
 			_timeline.gotoAndStop(value);
+			if (Math.abs(_slider1.value - value) > 0.01) {
+				_count = -5;
+			}
+			
+			_slider1.value = value;
 		}
 	}
 }
@@ -208,3 +281,100 @@ package
 		}
 		
 	}
+
+
+	import flash.display.Shape;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	/**
+	 * ステージ上をスワイプすると円が移動します。
+	 * 離した瞬間の加速度から摩擦量の割合だけ減衰してとまります。
+	 * ...
+	 * @author umhr
+	 */
+	 class Force1 extends Sprite 
+	{
+		/**
+		 * マウスの位置を保持
+		 */
+		private var _mouseMoveValue:Number = 0;
+		/**
+		 * 差分を保持
+		 */
+		public var currentDistanceValue:Number = 0;
+		/**
+		 * マウスが押下されている(true)か否(false)かを示す
+		 */
+		private var _isMouseDown:Boolean;
+		/**
+		 * 円の描画オブジェクト
+		 */
+		private var _circle:Shape = new Shape();
+		/**
+		 * 摩擦量
+		 */
+		private var _friction:Number = 0.1;
+		
+		public function Force1()
+		{
+			if (stage) init();
+			else addEventListener(Event.ADDED_TO_STAGE, init);
+		}
+		
+		private function init(e:Event = null):void 
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, init);
+			// entry point
+			_circle.graphics.beginFill(0xFF0000, 1);
+			_circle.graphics.drawCircle(0, 0, 25);
+			_circle.graphics.endFill();
+			_circle.x = 200;
+			_circle.y = 200;
+			addChild(_circle);
+			
+			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUp);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
+			//stage.addEventListener(Event.ENTER_FRAME, enterFrame);
+		}
+		
+		private function mouseUp(e:MouseEvent):void 
+		{
+			// マウスが押下されている状態のフラグを下げる。
+			_isMouseDown = false;
+		}
+		
+		private function mouseDown(e:MouseEvent):void 
+		{
+			// マウスが押下されたx座標を保持。
+			_mouseMoveValue = mouseX;
+			// マウスが押下されている状態のフラグを立てる。
+			_isMouseDown = true;
+		}
+		
+		public function enterFrame(e:Event = null):void 
+		{
+			if (_isMouseDown) {
+				// マウスが押下されている場合は、前回のマウス位置との差分をとる。
+				currentDistanceValue = mouseX - _mouseMoveValue;
+				_mouseMoveValue = mouseX;
+			}else {
+				// マウスが上がっている場合は、摩擦の割合だけ差分を減らす。
+				currentDistanceValue *= (1 - _friction);
+			}
+			
+			// 円のx座標を保持する。
+			var currentValue:Number = _circle.x;
+			// 差分を加算する。
+			currentValue += currentDistanceValue;
+			
+			// ステージの範囲内なら、新しい座標となる。
+			if (0 < currentValue && currentValue < stage.stageWidth) {	
+				_circle.x = currentValue;
+			}else {
+				// ステージの外なら、差分の符号を反転する。
+				//_currentDistanceValue = -_currentDistanceValue;
+			}
+		}
+		
+	}	

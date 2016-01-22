@@ -32,11 +32,12 @@ package
 			_timeline.append(TweenLite.to(_ball, 1, { aX:400, pY:400 } ));
 			_timeline.stop();
 			
-			// ステージ左上に表示するスライダー、操作するとonSlideが実行される
+			// ステージ左上に表示するスライダー、操作するとonSlideTimeが実行される
 			_slider1 = new HUISlider(this, 40, 20, "time", onSlideTime);
 			_slider1.minimum = 0;
 			_slider1.maximum = 4;
 			
+			// ステージ左上に縦に表示されるスライダー、操作するとonSlideRatioが実行される
 			_slider2 = new HUISlider(this, 20, 40, "ratio", onSlideRatio);
 			_slider2.minimum = 0;
 			_slider2.maximum = 1;
