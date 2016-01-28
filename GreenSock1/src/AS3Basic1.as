@@ -12,6 +12,10 @@ package
 	public class AS3Basic1 extends Sprite 
 	{
 		private var _logTextField:TextField;
+		/**
+		 * コンストラクタです。
+		 * クラス名と同名のメソッドがコンストラクタです。
+		 */
 		public function AS3Basic1() 
 		{
 			// FlashではActionScriptをつかいます。
@@ -62,7 +66,7 @@ package
 			// 型指定をする配列Vector型を使う。
 			// var sample:Vector.<int> = new Vector.<int>();
 			
-			// ◆連想配列
+			// ◆連想配列（ハッシュテーブル）
 			setTrace("\n◆連想配列");
 			var obj:Object = {time:12, ratio:0.5 };
 			obj["time"] += 2.5;
@@ -92,13 +96,19 @@ package
 			
 		}
 		
-		// 関数にプリミティブ（int,uint,Number,Boolean,String）を渡す場合には、
-		// 値渡しになります。
+		/**
+		 * 関数にプリミティブ（int,uint,Number,Boolean,String）を渡す場合には、
+		 * 値渡しになります。
+		 * @param	num
+		 */
 		private function myFunction1(num:int):void {
 			num ++;
 		}
 		
-		// 関数にプリミティブではないオブジェクトを渡す場合には、参照渡しになります。
+		/**
+		 * 関数にプリミティブではないオブジェクトを渡す場合には、参照渡しになります。
+		 * @param	list
+		 */
 		private function myFunction2(list:Array):void {
 			list[0] ++;
 		}
@@ -127,9 +137,5 @@ package
 			// trace(1,2,3);// 出力結果「1 2 3」
 			trace(arguments);
 		}
-		
-		
-		
 	}
-	
 }
